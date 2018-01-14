@@ -1,10 +1,11 @@
-package org.laotie.activiti.entity;
+package org.laotie777.activiti.entity;
 
-import java.io.Serializable;
-import javax.persistence.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.io.Serializable;
 
 
 @Entity
