@@ -18,7 +18,6 @@ import java.util.Collection;
  * 2018/1/14.
  */
 @Service
-@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl implements IUserService{
     @Autowired
     private IUserDao userDao;
@@ -38,6 +37,7 @@ public class UserServiceImpl implements IUserService{
      * 分页查询
      */
     @Override
+    @Transactional(readOnly = true)
     public Page<User> findPage(int pageNo,int pageSize) {
         PageRequest pageable = new PageRequest(pageNo - 1, pageSize);
         return userDao.findAll(pageable);

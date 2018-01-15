@@ -2,7 +2,6 @@ package org.laotie777.activiti;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.laotie777.activiti.controller.DemoController;
 import org.laotie777.activiti.entity.User;
 import org.laotie777.activiti.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;

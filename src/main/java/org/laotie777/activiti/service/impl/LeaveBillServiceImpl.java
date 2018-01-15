@@ -7,7 +7,10 @@ import org.laotie777.activiti.entity.LeaveBill;
 import org.laotie777.activiti.service.ILeaveBillService;
 import org.laotie777.activiti.utils.SpringWebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class LeaveBillServiceImpl implements ILeaveBillService {
 
     @Autowired
@@ -23,6 +26,7 @@ public class LeaveBillServiceImpl implements ILeaveBillService {
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public List<LeaveBill> findLeaveBillList() {
         List<LeaveBill> list = leaveBillDao.findAll();
         return list;
@@ -34,6 +38,7 @@ public class LeaveBillServiceImpl implements ILeaveBillService {
      * @param leaveBill
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void saveLeaveBill(LeaveBill leaveBill) {
         //获取请假单ID
         Long id = leaveBill.getId();
@@ -59,6 +64,7 @@ public class LeaveBillServiceImpl implements ILeaveBillService {
      * @return
      */
     @Override
+    @Transactional(readOnly = true)
     public LeaveBill findLeaveBillById(Long id) {
         LeaveBill bill = leaveBillDao.findOne(id);
         return bill;
@@ -68,6 +74,7 @@ public class LeaveBillServiceImpl implements ILeaveBillService {
      * 使用请假单ID，删除请假单
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteLeaveBillById(Long id) {
         leaveBillDao.delete(id);
     }

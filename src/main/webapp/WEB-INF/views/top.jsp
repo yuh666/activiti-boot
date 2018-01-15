@@ -35,7 +35,7 @@ body {
 	            <td width="448" background="${pageContext.request.contextPath }/images/main_06.gif"><table width="425" border="0" align="center" cellpadding="0" cellspacing="0">
 	              <tr>
 	                <td><div align="right"><span class="STYLE6"><b>当前登录用户：${sessionScope.globle_user.name }</b></span></div></td>
-	                <td><div align="right"><a href="loginAction_logout.action" target="parent"><img src="${pageContext.request.contextPath }/images/quit.gif" width="69" height="17" /></a></div></td>
+	                <td><div align="right"><a href="/logout" target="parent"><img src="${pageContext.request.contextPath }/images/quit.gif" width="69" height="17" /></a></div></td>
 	              </tr>
 	            </table></td>
 	          </tr>

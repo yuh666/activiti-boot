@@ -18,8 +18,9 @@ import org.laotie777.activiti.entity.LeaveBill;
 import org.laotie777.activiti.entity.WorkflowBean;
 import org.laotie777.activiti.service.IWorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class WorkflowServiceImpl implements IWorkflowService {
 	/**请假申请Dao*/
 	@Autowired

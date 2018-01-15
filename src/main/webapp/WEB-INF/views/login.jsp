@@ -15,7 +15,7 @@
 	</script>
 </head>
 <body style="text-align:center;">
-	<form action="loginAction_login.action" method="post">
+	<form action="/login" method="post">
 		<table width="100%"  height="100%" border="0" cellspacing="0" cellpadding="0">
 		  <tr>
 		    <td bgcolor="#1075b1">&nbsp;</td>
