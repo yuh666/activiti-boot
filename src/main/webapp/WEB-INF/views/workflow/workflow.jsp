@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ include file="/js/commons.jspf" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -34,23 +37,25 @@
 		        <td width="20%" height="20" bgcolor="d3eaef" class="STYLE6"><div align="center"><span class="STYLE10">发布时间</span></div></td>
 		        <td width="10%" height="20" bgcolor="d3eaef" class="STYLE6"><div align="center"><span class="STYLE10">操作</span></div></td>
 		      </tr>
-		      <s:if test="#depList!=null && #depList.size()>0">
-		      	<s:iterator value="#depList">
-		      		<tr>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="id"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center"><s:property value="name"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center"><s:date name="deploymentTime" format="yyyy-MM-dd HH:mm:ss"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF"><div align="center" class="STYLE21">
-				        	<a href="workflowAction_delDeployment.action?deploymentId=<s:property value="id"/>">删除</a>
-				        </div></td>
-				    </tr> 
-		      	</s:iterator>
-		      </s:if>
-		        
-		      
+
+                <c:if test="${depList != null && fn:length(depList) != 0}">
+                    <c:forEach items="${depList}" var="dep">
+                        <tr>
+                            <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">${dep.id}</div></td>
+                            <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center">${dep.name}</div></td>
+                            <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center"><fmt:formatDate value="${dep.deploymentTime}" pattern="yyyy-MM-dd HH:mm:ss"/></div></td>
+                            <td height="20" bgcolor="#FFFFFF"><div align="center" class="STYLE21">
+                                <a href="/workflow/delDeployment/${dep.id}">删除</a>
+                            </div></td>
+                        </tr>
+
+                    </c:forEach>
+                </c:if>
 		    </table></td>
 		  </tr>
 		</table>
+
+
 		<hr>
 		<br/>
 		<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -84,23 +89,23 @@
 		        <td width="10%" height="20" bgcolor="d3eaef" class="STYLE6"><div align="center"><span class="STYLE10">部署ID</span></div></td>
 		        <td width="10%" height="20" bgcolor="d3eaef" class="STYLE6"><div align="center"><span class="STYLE10">操作</span></div></td>
 		      </tr>
-		      <s:if test="#pdList!=null && #pdList.size()>0">
-		      	<s:iterator value="#pdList">
-		      		<tr>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="id"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center"><s:property value="name"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center"><s:property value="key"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="version"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="resourceName"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="diagramResourceName"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center"><s:property value="deploymentId"/></div></td>
-				        <td height="20" bgcolor="#FFFFFF"><div align="center" class="STYLE21">
-				        	<a target="_blank" href="workflowAction_viewImage.action?deploymentId=<s:property value="deploymentId"/>&imageName=<s:property value="diagramResourceName"/>">查看流程图</a> 
-					 	</div></td>
-				    </tr> 
-		      	</s:iterator>
-		      </s:if>
-		        
+
+                <c:if test="${pdList != null && fn:length(pdList) != 0}">
+                    <c:forEach items="${pdList}" var="pd">
+                        <tr>
+                            <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">${pd.id}</div></td>
+                            <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center">${pd.name}</div></td>
+                            <td height="20" bgcolor="#FFFFFF" class="STYLE19"><div align="center">${pd.key}</div></td>
+                            <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">${pd.version}</div></td>
+                            <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">${pd.resourceName}</div></td>
+                            <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">${pd.diagramResourceName}</div></td>
+                            <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">${pd.deploymentId}</div></td>
+                            <td height="20" bgcolor="#FFFFFF"><div align="center" class="STYLE21">
+                                <a target="_blank" href="/workflow/viewImage/${pd.id}/${pd.diagramResourceName}">查看流程图</a>
+                            </div></td>
+                        </tr>
+                    </c:forEach>
+                </c:if>
 		      
 		    </table></td>
 		  </tr>
@@ -108,7 +113,7 @@
 	<hr>
 	<br/>
 	<!-- 发布流程 -->
-	<form action="workflowAction_newdeploy.action" enctype="multipart/form-data" method="POST">
+	<form action="/workflow/newdeploy" enctype="multipart/form-data" method="POST">
 		<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 		  <tr>
 		    <td height="30"><table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -131,14 +136,13 @@
 		  <tr>
 		    <td>
 		    	<div align="left" class="STYLE21">
-					流程名称：<s:textfield name="filename" cssStyle="width: 200px;"/><br/>
-					流程文件:<s:file name="file" cssStyle="width: 200px;"/><br/>
+					流程名称：<input type="text" name="filename" cssStyle="width: 200px;"/><br/>
+					流程文件:<input type="file" name="file" cssStyle="width: 200px;"/><br/>
 					<input type="submit" value="上传流程" class="button_ok"/>
 				</div>
 		    </td>
 		  </tr>
 	</table>
-		
 	</form>
 </body>
 </html>

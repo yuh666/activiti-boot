@@ -4,7 +4,7 @@ import java.io.File;
 
 public class WorkflowBean {
 
-	private File file;		//流程定义部署文件
+	//private File file;		//流程定义部署文件
 	private String filename;//流程定义名称
 	
 	private Long id;//申请单ID
@@ -15,12 +15,12 @@ public class WorkflowBean {
 	private String outcome;		//连线名称
 	private String comment;		//备注
 	
-	public File getFile() {
+	/*public File getFile() {
 		return file;
 	}
 	public void setFile(File file) {
 		this.file = file;
-	}
+	}*/
 	public String getFilename() {
 		return filename;
 	}

@@ -3,6 +3,7 @@
 <%@ include file="/js/commons.jspf" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -46,7 +47,7 @@
 		        <td width="25%" height="20" bgcolor="d3eaef" class="STYLE6"><div align="center"><span class="STYLE10">操作</span></div></td>
 		      </tr>
 
-                <c:if test="#list!=null && #list.size()>0">
+                <c:if test="${list != null && fn:length(list) != 0}">
                     <c:forEach items="${list}" var="leaveBill">
                         <tr>
                             <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">${leaveBill.id}</div></td>
