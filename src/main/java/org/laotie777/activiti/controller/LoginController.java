@@ -90,7 +90,7 @@ public class LoginController {
     public ModelAndView logout(HttpSession session) {
         session.removeAttribute(SpringWebUtil.GLOBLE_USER_SESSION);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
+        modelAndView.setViewName("redirect:/");
         return modelAndView;
     }
 
