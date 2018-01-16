@@ -4,6 +4,7 @@ import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Task;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
+import org.laotie777.activiti.entity.LeaveBill;
 import org.laotie777.activiti.entity.WorkflowBean;
 import org.laotie777.activiti.service.IWorkflowService;
 import org.laotie777.activiti.service.impl.WorkflowServiceImpl;
@@ -182,11 +183,40 @@ public class WorkFlowController {
     }
 
 
+    /**
+     * 根据formKey获得下一步的去向
+     * @param taskId
+     * @return
+     */
+    @RequestMapping("viewTaskForm/{id}")
+    public ModelAndView viewTaskForm(@PathVariable(name = "id")String taskId){
+        //去他该去的地方
+        String taskFormKeyByTaskId = workflowService.findTaskFormKeyByTaskId(taskId);
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("redirect:"+taskFormKeyByTaskId+"/"+taskId);
+        return mav;
+
+    }
 
 
+    /**
+     * 带着请假单去审核
+     * @param taskId
+     * @return
+     */
+    @RequestMapping("audit/{id}")
+    public ModelAndView audit(@PathVariable(name = "id")String taskId){
+        LeaveBill leaveBillByTaskId = workflowService.findLeaveBillByTaskId(taskId);
+        //查到请假单
+        ModelAndView mav = new ModelAndView();
 
+        mav.addObject("leaveBill",leaveBillByTaskId);
+        mav.addObject("taskId",taskId);
+        //到审核页面
+        mav.setViewName("/workflow/taskForm");
+        return mav;
 
-
+    }
 
 }
 

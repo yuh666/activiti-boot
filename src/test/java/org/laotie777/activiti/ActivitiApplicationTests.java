@@ -1,5 +1,6 @@
 package org.laotie777.activiti;
 
+import org.activiti.engine.RepositoryService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.laotie777.activiti.entity.User;
@@ -25,7 +26,8 @@ public class ActivitiApplicationTests {
     private IUserService userService;
     @Autowired
     private IWorkflowService workflowService;
-
+    @Autowired
+    private RepositoryService repositoryService;
 
     Random random = new Random(100000L);
 
@@ -53,9 +55,13 @@ public class ActivitiApplicationTests {
 
 
     @Test
-    public void deploye(){
+    public void deploye() {
 
-        workflowService.saveNewDeploye(new File("/Users/yuh/Desktop/归档.zip"),"流程1");
+        //workflowService.saveNewDeploye(new File("/Users/yuh/Desktop/归档.zip"),"流程2");
+        repositoryService.createDeployment().addClasspathResource("leaveBill2.bpmn")
+                .addClasspathResource("leaveBill2.png")
+                .name("aaaa1")
+                .deploy();
 
     }
 

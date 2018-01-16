@@ -14,8 +14,10 @@ import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.laotie777.activiti.dao.ILeaveBillDao;
@@ -165,15 +167,41 @@ public class WorkflowServiceImpl implements IWorkflowService {
 		return taskService.createTaskQuery().taskAssignee(name).list();
 	}
 
+    /**
+     * 获取流程图里面的FormKey
+     * @param taskId
+     * @return
+     */
 	@Override
 	public String findTaskFormKeyByTaskId(String taskId) {
-		return null;
+        TaskFormData taskFormData = formService.getTaskFormData(taskId);
+        return taskFormData.getFormKey();
 	}
 
+    /**
+     * 根据任务ID查询请假单
+     * @param taskId
+     * @return
+     */
 	@Override
 	public LeaveBill findLeaveBillByTaskId(String taskId) {
-		return null;
-	}
+        LeaveBill one = null;
+	    try{
+            //先根据taskId查询到Task
+            Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+            //再查询到流程实例
+            ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
+            //根据businessKey查询到请假单
+            String businessKey = processInstance.getBusinessKey();
+            String leaveBillId = businessKey.split(":")[1];
+            one = leaveBillDao.findOne(Long.parseLong(leaveBillId));
+        }catch (Exception e){
+	        logger.error("请假单查询失败");
+        }
+
+        return one;
+
+    }
 
 	@Override
 	public List<String> findOutComeListByTaskId(String taskId) {

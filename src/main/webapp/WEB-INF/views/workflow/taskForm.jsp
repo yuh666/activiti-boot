@@ -31,13 +31,17 @@
 		  		<form action="workflowAction_submitTask.action" method="POST">
 			  		<div align="left" class="STYLE21">
 			  			<!-- 任务ID -->
-			  			<s:hidden name="taskId"></s:hidden>
+						<input type="hidden" name="taskId" value="${taskId}"/>
 			  			<!-- 请假单ID -->
-			  			<s:hidden name="id"></s:hidden>
-				 		请假天数:<s:textfield name="days" disabled="true" cssStyle="width: 200px;"/><br/>
-				 		请假原因:<s:textfield name="content" disabled="true" cssStyle="width: 800px;"/><br/>
-				 		请假备注:<s:textarea name="remark" disabled="true" cols="30" rows="2"/><br/>
-				 		批&emsp;&emsp;注:<s:textarea name="comment" cols="50" rows="5"/><br/>
+                        <input type="hidden" name="id" value="${leaveBill.id}"/>
+
+
+						请假天数:<input type="text" name="days" value="${leaveBill.days}" cssStyle="width: 200px;"/><br>
+						请假原因:<input type="text" name="content" value="${leaveBill.content}" cssStyle="width: 200px;"/><br>
+						请假备注:<textarea name="remark" cols="50" rows="5">${leaveBill.remark}</textarea><br/>
+                      <%--  批&emsp;&emsp; 注:<textarea name="remark" cols="50" rows="5">${leaveBill.comment}</textarea><br/>--%>
+
+
 				 		<!-- 使用连线的名称作为按钮 -->
 				 		<s:if test="#outcomeList!=null && #outcomeList.size()>0">
 				 			<s:iterator value="#outcomeList">
