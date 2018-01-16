@@ -7,6 +7,7 @@ import org.activiti.engine.task.Task;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.laotie777.activiti.entity.LeaveBill;
 import org.laotie777.activiti.entity.WorkflowBean;
+import org.laotie777.activiti.service.ILeaveBillService;
 import org.laotie777.activiti.service.IWorkflowService;
 import org.laotie777.activiti.service.impl.WorkflowServiceImpl;
 import org.laotie777.activiti.utils.SpringWebUtil;
@@ -38,6 +39,10 @@ public class WorkFlowController {
 
     @Autowired
     private IWorkflowService workflowService;
+
+    @Autowired
+    private ILeaveBillService leaveBillService;
+
 
     /**
      * 查询流程定义列表 和 流程部署列表
@@ -265,6 +270,25 @@ public class WorkFlowController {
         return mav;
 
     }
+
+    /**
+     * 查询历史请假信息
+     * @param id
+     * @return
+     */
+    @RequestMapping("viewHisComment/{id}")
+    public ModelAndView viewHisComment(@PathVariable(name = "id")String id){
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("/workflow/taskFormHis");
+        LeaveBill leaveBillById = leaveBillService.findLeaveBillById(Long.parseLong(id));
+        mav.addObject("leaveBill",leaveBillById);
+        List<Comment> commentByLeaveBillId = workflowService.findCommentByLeaveBillId(Long.parseLong(id));
+        mav.addObject("comments",commentByLeaveBillId);
+        return mav;
+
+    }
+
+
 
 
 

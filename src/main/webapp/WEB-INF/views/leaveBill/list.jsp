@@ -82,7 +82,7 @@
                                         <a href="${pageContext.request.contextPath }/workflow/viewHisComment/${leaveBill.id}">查看审核记录</a>
                                     </c:when>
                                     <c:otherwise>
-                                        <a href="${pageContext.request.contextPath }/leaveBill/delete.action/${leaveBill.id}" >删除</a>
+                                        <a href="${pageContext.request.contextPath }/leaveBill/delete/${leaveBill.id}" >删除</a>
                                         <a href="${pageContext.request.contextPath }/workflow/viewHisComment/${leaveBill.id}" >查看审核记录</a>
                                     </c:otherwise>
                                 </c:choose>

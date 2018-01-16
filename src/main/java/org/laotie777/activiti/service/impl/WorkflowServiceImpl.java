@@ -13,6 +13,7 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.form.TaskFormData;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmTransition;
@@ -313,19 +314,31 @@ public class WorkflowServiceImpl implements IWorkflowService {
     }
 
     /**
-     * 根据taskId查询批注
+     * 根据taskId查询所有批注
      * @param taskId
      * @return
      */
 	@Override
 	public List<Comment> findCommentByTaskId(String taskId) {
-        List<Comment> taskComments = taskService.getTaskComments(taskId);
+
+        //查询任务
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        List<Comment> taskComments = taskService.getProcessInstanceComments(task.getProcessInstanceId());
         return taskComments;
 	}
 
+    /**
+     * 根据请假单ID查询批注
+     * @param id
+     * @return
+     */
 	@Override
 	public List<Comment> findCommentByLeaveBillId(Long id) {
-		return null;
+        LeaveBill one = leaveBillDao.findOne(id);
+        String simpleName = one.getClass().getSimpleName();
+        String key = simpleName + ":" + id;
+        HistoricProcessInstance historicProcessInstance = historyService.createHistoricProcessInstanceQuery().processInstanceBusinessKey(key).singleResult();
+        return taskService.getProcessInstanceComments(historicProcessInstance.getId());
 	}
 
     /**
