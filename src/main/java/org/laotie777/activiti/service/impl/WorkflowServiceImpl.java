@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
@@ -18,12 +19,15 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.laotie777.activiti.dao.ILeaveBillDao;
+import org.laotie777.activiti.entity.Employee;
 import org.laotie777.activiti.entity.LeaveBill;
 import org.laotie777.activiti.entity.WorkflowBean;
 import org.laotie777.activiti.service.IWorkflowService;
+import org.laotie777.activiti.utils.SpringWebUtil;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 工作流Service
@@ -68,6 +72,7 @@ public class WorkflowServiceImpl implements IWorkflowService {
 
 
 	@Override
+    @Transactional(readOnly = true)
 	public void saveNewDeploye(File file, String filename) {
             logger.info("开始部署 => " + filename);
         try {
@@ -83,6 +88,7 @@ public class WorkflowServiceImpl implements IWorkflowService {
      * @return
      */
 	@Override
+    @Transactional(readOnly = true)
 	public List<Deployment> findDeploymentList() {
 	    /*查的是ACT_RE_DEPLOYMENT*/
 		return repositoryService.createDeploymentQuery().orderByDeploymenTime().desc().list();
@@ -93,6 +99,7 @@ public class WorkflowServiceImpl implements IWorkflowService {
      * @return
      */
 	@Override
+    @Transactional(readOnly = true)
 	public List<ProcessDefinition> findProcessDefinitionList() {
 		/*ACT_RE_PROCDEF*/
 	    return repositoryService.createProcessDefinitionQuery().orderByProcessDefinitionVersion().desc().list();
@@ -105,6 +112,7 @@ public class WorkflowServiceImpl implements IWorkflowService {
      * @return
      */
 	@Override
+    @Transactional(readOnly = true)
 	public InputStream findImageInputStream(String deploymentId, String imageName) {
         return repositoryService.getResourceAsStream(deploymentId,imageName);
 	}
@@ -114,19 +122,47 @@ public class WorkflowServiceImpl implements IWorkflowService {
      * @param deploymentId
      */
 	@Override
+    @Transactional(rollbackFor = Exception.class)
 	public void deleteProcessDefinitionByDeploymentId(String deploymentId) {
 	    //删除部署的流程 并且删除所有流程实例
         repositoryService.deleteDeployment(deploymentId,true);
 	}
 
+    /**
+     * 启动流程实例
+     * @param leaveBillId
+     */
 	@Override
-	public void saveStartProcess(WorkflowBean workflowBean) {
+    @Transactional(rollbackFor = Exception.class)
+	public void saveStartProcess(Long leaveBillId) {
+        //查出请假单 并利用快照保存
+        LeaveBill leaveBill = leaveBillDao.findOne(leaveBillId);
+        //设置成启动状态
+        leaveBill.setState(1);
+        //根据JAVABEAN的类名启动对应的业务流程实例
+        String key = leaveBill.getClass().getSimpleName();
+        //设置流程变量
+        HashMap<String,Object> vars = new HashMap<>();
+        //从session中取得当前登录人
+        Employee employee = SpringWebUtil.get();
+        //"inputUser" => 流程图中指定的
+        vars.put("inputUser",employee.getName());
+        //设置流程实例和具体业务实例关联
+        String businessId = key+":"+leaveBillId;
+        vars.put("businessId",businessId);
+        //运行时service 启动实例
+        runtimeService.startProcessInstanceByKey(key,businessId,vars);
+    }
 
-	}
-
+    /**
+     * 查询个人任务
+     * @param name
+     * @return
+     */
 	@Override
 	public List<Task> findTaskListByName(String name) {
-		return null;
+	    //利用任务Service查询
+		return taskService.createTaskQuery().taskAssignee(name).list();
 	}
 
 	@Override

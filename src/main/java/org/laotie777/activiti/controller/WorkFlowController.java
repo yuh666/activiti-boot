@@ -2,10 +2,12 @@ package org.laotie777.activiti.controller;
 
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.task.Task;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.laotie777.activiti.entity.WorkflowBean;
 import org.laotie777.activiti.service.IWorkflowService;
 import org.laotie777.activiti.service.impl.WorkflowServiceImpl;
+import org.laotie777.activiti.utils.SpringWebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -134,6 +136,54 @@ public class WorkFlowController {
         return mav;
 
     }
+
+
+    /**
+     * 启动流程实例
+     * @param id
+     * @return
+     */
+    @RequestMapping("startProcess/{id}")
+    public ModelAndView startProcess(@PathVariable(name = "id") String id){
+
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("redirect:/leaveBill/home");
+
+        try {
+            workflowService.saveStartProcess(Long.parseLong(id));
+        } catch (Exception e) {
+            logger.error(id + "=> 流程启动失败");
+        }
+        return mav;
+
+    }
+
+
+    /**
+     * 查询个人任务
+     *
+     * @param bean
+     * @return
+     */
+    @RequestMapping("listTask")
+    public ModelAndView listTask(){
+
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("/workflow/task");
+
+        try {
+            List<Task> taskListByName = workflowService.findTaskListByName(SpringWebUtil.get().getName());
+            mav.addObject("list",taskListByName);
+        } catch (Exception e) {
+            logger.error("任务查询失败");
+        }
+        return mav;
+
+    }
+
+
+
+
 
 
 

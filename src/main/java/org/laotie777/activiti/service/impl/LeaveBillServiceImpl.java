@@ -53,8 +53,6 @@ public class LeaveBillServiceImpl implements ILeaveBillService {
 
         //1：执行update的操作，完成更新
         leaveBillDao.save(leaveBill);
-
-
     }
 
     /**

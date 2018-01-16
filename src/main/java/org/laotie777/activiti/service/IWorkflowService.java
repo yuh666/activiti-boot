@@ -52,9 +52,9 @@ public interface IWorkflowService {
 
     /**
      * 启动流程实例
-     * @param workflowBean
+     * @param leaveBillId
      */
-    void saveStartProcess(WorkflowBean workflowBean);
+    void saveStartProcess(Long leaveBillId);
 
     /**
      * 根据名字查询任务
