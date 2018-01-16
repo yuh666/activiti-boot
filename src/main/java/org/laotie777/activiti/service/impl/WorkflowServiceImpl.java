@@ -98,9 +98,15 @@ public class WorkflowServiceImpl implements IWorkflowService {
 	    return repositoryService.createProcessDefinitionQuery().orderByProcessDefinitionVersion().desc().list();
 	}
 
+    /**
+     * 根据部署ID查看图像
+     * @param deploymentId
+     * @param imageName
+     * @return
+     */
 	@Override
 	public InputStream findImageInputStream(String deploymentId, String imageName) {
-		return null;
+        return repositoryService.getResourceAsStream(deploymentId,imageName);
 	}
 
 	@Override
