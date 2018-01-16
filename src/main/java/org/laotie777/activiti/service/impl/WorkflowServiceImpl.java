@@ -354,9 +354,40 @@ public class WorkflowServiceImpl implements IWorkflowService {
         return repositoryService.createProcessDefinitionQuery().processDefinitionId(task.getProcessDefinitionId()).singleResult();
 	}
 
+    /**
+     * 根据taskId查位置
+     * @param taskId
+     * @return
+     */
 	@Override
 	public Map<String, Object> findCoordingByTask(String taskId) {
-		return null;
+        //1:使用任务ID，查询任务对象
+        Task task = taskService.createTaskQuery()//
+                .taskId(taskId)//使用任务ID查询
+                .singleResult();
+        //2：获取流程定义ID
+        String processDefinitionId = task.getProcessDefinitionId();
+        //3：查询ProcessDefinitionEntiy对象
+        ProcessDefinitionEntity processDefinitionEntity = (ProcessDefinitionEntity) repositoryService.getProcessDefinition(processDefinitionId);
+        //使用任务对象Task获取流程实例ID
+        String processInstanceId = task.getProcessInstanceId();
+        //使用流程实例ID，查询正在执行的执行对象表，返回流程实例对象
+        ProcessInstance pi = runtimeService.createProcessInstanceQuery()//
+                .processInstanceId(processInstanceId)//使用流程实例ID查询
+                .singleResult();
+        //获取当前活动的id
+        String activityId = pi.getActivityId();
+        //4：获取当前的活动
+        ActivityImpl activityImpl = processDefinitionEntity.findActivity(activityId);
+
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("x",activityImpl.getX());
+        map.put("y",activityImpl.getY());
+        map.put("width",activityImpl.getWidth());
+        map.put("height",activityImpl.getHeight());
+
+        return map;
+
 	}
 
     /**

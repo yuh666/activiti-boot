@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yuh
@@ -287,6 +288,26 @@ public class WorkFlowController {
         return mav;
 
     }
+
+    /**
+     * 查看当前流程图
+     * @param id
+     * @return
+     */
+    @RequestMapping("viewCurrentImage/{id}")
+    public ModelAndView viewCurrentImage(@PathVariable(name = "id")String id){
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("/workflow/image");
+        ProcessDefinition processDefinitionByTaskId = workflowService.findProcessDefinitionByTaskId(id);
+        mav.addObject("deploymentId",processDefinitionByTaskId.getDeploymentId());
+        mav.addObject("imageName",processDefinitionByTaskId.getDiagramResourceName());
+        Map<String, Object> coordingByTask = workflowService.findCoordingByTask(id);
+        mav.addObject("acs",coordingByTask);
+        return mav;
+
+    }
+
+
 
 
 
