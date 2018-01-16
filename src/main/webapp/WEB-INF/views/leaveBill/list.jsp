@@ -59,10 +59,10 @@
                             <td height="20" bgcolor="#FFFFFF" class="STYLE19">
                                 <div align="center">
                                     <c:choose>
-                                        <c:when test="state==0">
+                                        <c:when test="${leaveBill.state==0}">
                                             初始录入
                                         </c:when>
-                                        <c:when test="state==1">
+                                        <c:when test="${leaveBill.state==1}">
                                             审核中
                                         </c:when>
                                         <c:otherwise>
@@ -73,12 +73,12 @@
                             </td>
                             <td height="20" bgcolor="#FFFFFF"><div align="center" class="STYLE21">
                                 <c:choose>
-                                    <c:when test="state==0">
+                                    <c:when test="${leaveBill.state==0}">
                                         <a href="${pageContext.request.contextPath }/leaveBill/input/${leaveBill.id}">修改</a>
-                                        <a href="${pageContext.request.contextPath }/leaveBill/delete.action/${leaveBill.id}">删除</a>
+                                        <a href="${pageContext.request.contextPath }/leaveBill/delete/${leaveBill.id}">删除</a>
                                         <a href="${pageContext.request.contextPath }/workflow/startProcess/${leaveBill.id}" >申请请假</a>
                                     </c:when>
-                                    <c:when test="state==1">
+                                    <c:when test="${leaveBill.state==1}">
                                         <a href="${pageContext.request.contextPath }/workflow/viewHisComment/${leaveBill.id}">查看审核记录</a>
                                     </c:when>
                                     <c:otherwise>

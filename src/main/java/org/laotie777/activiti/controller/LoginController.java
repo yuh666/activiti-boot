@@ -26,10 +26,23 @@ public class LoginController {
      *
      * @return
      */
+    @RequestMapping("/loginPage")
+    public ModelAndView loginPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("login");
+        return modelAndView;
+    }
+
+
+    /**
+     * 首页
+     *
+     * @return
+     */
     @RequestMapping("/")
     public ModelAndView index() {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("login");
+        modelAndView.setViewName("main");
         return modelAndView;
     }
 
@@ -44,7 +57,7 @@ public class LoginController {
         Employee employeeByName = employeeService.findEmployeeByName(name);
         session.setAttribute(SpringWebUtil.GLOBLE_USER_SESSION, employeeByName);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("main");
+        modelAndView.setViewName("redirect:/");
         return modelAndView;
     }
 

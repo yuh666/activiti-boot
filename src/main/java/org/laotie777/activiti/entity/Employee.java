@@ -1,5 +1,8 @@
 package org.laotie777.activiti.entity;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 
 /**
@@ -7,6 +10,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "a_employee")
+@DynamicInsert(true)
+@DynamicUpdate(true)
 public class Employee {
     /**
      * 主键ID

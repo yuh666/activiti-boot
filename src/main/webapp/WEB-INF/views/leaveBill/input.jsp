@@ -6,7 +6,7 @@
 <title>请假管理</title>
 </head>
 <body>
- 	<form action="leaveBillAction_save.action" method="POST">
+ 	<form action="/leaveBill/save" method="POST">
  		<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 		  <tr>
 		    <td height="30"><table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -33,11 +33,11 @@
 		  <tr>
 		    <td>
 		    	<div align="left" class="STYLE21">
-		    		<s:hidden name="id"></s:hidden>
-		    		<s:hidden name="user.id"></s:hidden>
-			 		请假天数:<s:textfield name="days" cssStyle="width: 200px;"/><br/>
-			 		请假原因:<s:textfield name="content" cssStyle="width: 800px;"/><br/>
-			 		备&emsp;&emsp;注:<s:textarea name="remark" cols="50" rows="5"/><br/>
+					<input type="hidden" name="id" value="${leaveBill.id}"/>
+					<input type="hidden" name="user.id" value="${leaveBill.user.id}"/>
+			 		请假天数:<input type="text" name="days" value="${leaveBill.days}" cssStyle="width: 200px;"/><br>
+					请假原因:<input type="text" name="content" value="${leaveBill.content}" cssStyle="width: 200px;"/><br>
+					备&emsp;&emsp;注:<textarea name="remark" cols="50" rows="5">${leaveBill.remark}</textarea><br/>
 			 		<input type="submit" value="提交" class="button_ok"/>
 				</div>
 		    </td>

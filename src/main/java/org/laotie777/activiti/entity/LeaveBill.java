@@ -1,5 +1,8 @@
 package org.laotie777.activiti.entity;
 
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -8,6 +11,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name="a_leaveBill")
+@DynamicInsert(true)
+@DynamicUpdate(true)
 public class LeaveBill {
 	/**
 	 * 主键ID

@@ -16,16 +16,15 @@ import javax.swing.*;
 public class LoginInterceptor implements HandlerInterceptor{
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-
         String requestURI = httpServletRequest.getRequestURI();
-        if("/".equals(requestURI) || "/login".equals(requestURI)){
+        if("/login".equals(requestURI) || "/loginPage".equals(requestURI)){
             return true;
         }else{
             HttpSession session = httpServletRequest.getSession();
             Object attribute = session.getAttribute(SpringWebUtil.GLOBLE_USER_SESSION);
             if(attribute == null){
                 //httpServletRequest.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(httpServletRequest, httpServletResponse);
-                httpServletResponse.sendRedirect("/");
+                httpServletResponse.sendRedirect("/loginPage");
                 return false;
             }
         }
@@ -36,11 +35,9 @@ public class LoginInterceptor implements HandlerInterceptor{
 
     @Override
     public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, ModelAndView modelAndView) throws Exception {
-
     }
 
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) throws Exception {
-
     }
 }
