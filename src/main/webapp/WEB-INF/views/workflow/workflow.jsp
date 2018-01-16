@@ -113,7 +113,7 @@
 	<hr>
 	<br/>
 	<!-- 发布流程 -->
-	<form action="/workflow/newdeploy" enctype="multipart/form-data" method="POST">
+
 		<table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
 		  <tr>
 		    <td height="30"><table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -135,23 +135,25 @@
 		  </tr>
 		  <tr>
 		    <td>
+				<form action="/workflow/newdeploy" enctype="multipart/form-data" method="POST">
                 <div align="left" class="STYLE21">
                     流程名称：<input type="text" name="fileName" cssStyle="width: 200px;"/><br/>
                     流程文件:<input type="file" name="file" cssStyle="width: 200px;"/><br/>
                 </div>
-
-                <hr>
-
-                <div align="left" class="STYLE21">
-                    流程名称：<input type="text" name="fileName" cssStyle="width: 200px;"/><br/>
-                    bpmn:<input type="file" name="bpmn" cssStyle="width: 200px;"/><br/>
-                    png:<input type="file" name="png" cssStyle="width: 200px;"/><br/>
-                </div>
-                <br>
                 <input type="submit" value="上传流程" class="button_ok"/>
+				</form>
+			<hr/>
+				<form action="/workflow/newdeployFile" enctype="multipart/form-data" method="POST">
+					<div align="left" class="STYLE21">
+						流程名称：<input type="text" name="fileName" cssStyle="width: 200px;"/><br/>
+						bpmn:<input type="file" name="bpmn" cssStyle="width: 200px;"/><br/>
+						png:<input type="file" name="png" cssStyle="width: 200px;"/><br/>
+					</div>
+					<input type="submit" value="上传流程" class="button_ok"/>
+				</form>
 		    </td>
 		  </tr>
 	</table>
-	</form>
+
 </body>
 </html>
