@@ -2,6 +2,7 @@ package org.laotie777.activiti.controller;
 
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.laotie777.activiti.entity.LeaveBill;
@@ -210,13 +211,41 @@ public class WorkFlowController {
         //查到请假单
         ModelAndView mav = new ModelAndView();
 
+        //请假单
         mav.addObject("leaveBill",leaveBillByTaskId);
+        //任务ID
         mav.addObject("taskId",taskId);
+
+        //批注
+        List<Comment> commentByTaskId = workflowService.findCommentByTaskId(taskId);
+        mav.addObject("comments",commentByTaskId);
+
+        //连线
+        List<String> outComeListByTaskId = workflowService.findOutComeListByTaskId(taskId);
+        mav.addObject("links",outComeListByTaskId);
+
         //到审核页面
         mav.setViewName("/workflow/taskForm");
         return mav;
 
     }
+
+
+    /**
+     * 完成任务
+     * @param bean
+     * @return
+     */
+    @RequestMapping("submitTask")
+    public ModelAndView submitTask(WorkflowBean bean){
+        workflowService.saveSubmitTask(bean);
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("redirect:/workflow/listTask");
+        return mav;
+
+    }
+
+
 
 }
 

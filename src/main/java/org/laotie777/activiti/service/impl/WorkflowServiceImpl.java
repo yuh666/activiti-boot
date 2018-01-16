@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,11 +16,17 @@ import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.form.TaskFormData;
+import org.activiti.engine.impl.identity.Authentication;
+import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.PvmTransition;
+import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
+import org.apache.commons.lang3.StringUtils;
 import org.laotie777.activiti.dao.ILeaveBillDao;
 import org.laotie777.activiti.entity.Employee;
 import org.laotie777.activiti.entity.LeaveBill;
@@ -71,6 +78,7 @@ public class WorkflowServiceImpl implements IWorkflowService {
      */
 	@Autowired
 	private HistoryService historyService;
+
 
 
 	@Override
@@ -203,19 +211,118 @@ public class WorkflowServiceImpl implements IWorkflowService {
 
     }
 
+    /**
+     * 查询活动后面的连线
+     * @param taskId
+     * @return
+     */
 	@Override
 	public List<String> findOutComeListByTaskId(String taskId) {
-		return null;
+
+	   /* List<String> names = new ArrayList<>();
+
+	    //查询任务
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        //查询流程定义实体
+        ProcessDefinitionEntity entity = (ProcessDefinitionEntity)repositoryService.createProcessDefinitionQuery().processDefinitionId(task.getProcessDefinitionId()).singleResult();
+	    //查询运行中的流程实例
+        ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(task.getProcessInstanceId()).singleResult();
+        //查询执行到什么活动了
+        String activityId = processInstance.getActivityId();
+        //查询在实体中对应的位置
+        ActivityImpl activity = entity.findActivity(activityId);
+        //查询出来有几条线
+        List<PvmTransition> outgoingTransitions = activity.getOutgoingTransitions();
+        for (PvmTransition pvm:outgoingTransitions){
+            Object name = pvm.getProperty("name");
+            names.add((String)name);
+        }
+
+        if(names.size() == 0){
+            names.add("默认提交");
+        }
+
+        return names;*/
+
+
+        //返回存放连线的名称集合
+        List<String> list = new ArrayList<String>();
+        //1:使用任务ID，查询任务对象
+        Task task = taskService.createTaskQuery()//
+                .taskId(taskId)//使用任务ID查询
+                .singleResult();
+        //2：获取流程定义ID
+        String processDefinitionId = task.getProcessDefinitionId();
+        //3：查询ProcessDefinitionEntiy对象
+        ProcessDefinitionEntity processDefinitionEntity = (ProcessDefinitionEntity) repositoryService.getProcessDefinition(processDefinitionId);
+        //使用任务对象Task获取流程实例ID
+        String processInstanceId = task.getProcessInstanceId();
+        //使用流程实例ID，查询正在执行的执行对象表，返回流程实例对象
+        ProcessInstance pi = runtimeService.createProcessInstanceQuery()//
+                .processInstanceId(processInstanceId)//使用流程实例ID查询
+                .singleResult();
+        //获取当前活动的id
+        String activityId = pi.getActivityId();
+        //4：获取当前的活动
+        ActivityImpl activityImpl = processDefinitionEntity.findActivity(activityId);
+        //5：获取当前活动完成之后连线的名称
+        List<PvmTransition> pvmList = activityImpl.getOutgoingTransitions();
+        if(pvmList!=null && pvmList.size()>0){
+            for(PvmTransition pvm:pvmList){
+                String name = (String) pvm.getProperty("name");
+                if(StringUtils.isNotBlank(name)){
+                    list.add(name);
+                }
+                else{
+                    list.add("默认提交");
+                }
+            }
+        }
+        return list;
+
 	}
 
+
+    /**
+     * 完成任务
+     * @param workflowBean
+     */
 	@Override
 	public void saveSubmitTask(WorkflowBean workflowBean) {
+	    //准备流程变量
+        String outcome = workflowBean.getOutcome();
+        HashMap<String,Object> map = new HashMap<>();
+        if(outcome != null && !"默认提交".equals(outcome)){
+            map.put("outcome",outcome);
+        }
+        //查询任务
+        Task task = taskService.createTaskQuery().taskId(workflowBean.getTaskId()).singleResult();
+        //添加批注
+        Authentication.setAuthenticatedUserId(SpringWebUtil.get().getName());
+        taskService.addComment(workflowBean.getTaskId(), task.getProcessInstanceId(), workflowBean.getComment());
+        //完成任务
+        taskService.complete(workflowBean.getTaskId(),map);
+        //使用流程实例ID查询
+        ProcessInstance pi = runtimeService.createProcessInstanceQuery()
+                .processInstanceId(task.getProcessInstanceId())
+                .singleResult();
+        //流程结束了
+        if(pi==null){
+            //更新请假单表的状态从1变成2（审核中-->审核完成）
+            LeaveBill bill = leaveBillDao.findOne(workflowBean.getId());
+            bill.setState(2);
+        }
+    }
 
-	}
-
+    /**
+     * 根据taskId查询批注
+     * @param taskId
+     * @return
+     */
 	@Override
 	public List<Comment> findCommentByTaskId(String taskId) {
-		return null;
+        List<Comment> taskComments = taskService.getTaskComments(taskId);
+        return taskComments;
 	}
 
 	@Override
@@ -223,9 +330,17 @@ public class WorkflowServiceImpl implements IWorkflowService {
 		return null;
 	}
 
+    /**
+     * 根据taskId查询流程定义
+     * @param taskId
+     * @return
+     */
 	@Override
 	public ProcessDefinition findProcessDefinitionByTaskId(String taskId) {
-		return null;
+        //查询任务
+        Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+        //查询流程定义实体
+        return repositoryService.createProcessDefinitionQuery().processDefinitionId(task.getProcessDefinitionId()).singleResult();
 	}
 
 	@Override

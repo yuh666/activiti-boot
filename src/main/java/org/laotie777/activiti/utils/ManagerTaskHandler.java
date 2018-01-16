@@ -15,10 +15,7 @@ import javax.servlet.ServletContext;
  *
  */
 @SuppressWarnings("serial")
-public class ManagerTaskHandler implements TaskListener,ServletContextAware {
-
-
-	private ServletContext servletContext = null;
+public class ManagerTaskHandler implements TaskListener {
 
 	@Override
 	public void notify(DelegateTask delegateTask) {
@@ -28,16 +25,12 @@ public class ManagerTaskHandler implements TaskListener,ServletContextAware {
 		String name = employee.getName();
 		//使用当前用户名查询用户的详细信息
 		//从web中获取spring容器
-		WebApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(servletContext);
-		IEmployeeService employeeService = (IEmployeeService) ac.getBean("employeeService");
+		WebApplicationContext ac = WebApplicationContextUtils.getWebApplicationContext(SpringWebUtil.getRequest().getServletContext());
+		IEmployeeService employeeService = (IEmployeeService) ac.getBean("employeeServiceImpl");
 		Employee emp = employeeService.findEmployeeByName(name);
 		//设置个人任务的办理人
 		delegateTask.setAssignee(emp.getManager().getName());
 
 	}
 
-	@Override
-	public void setServletContext(ServletContext servletContext) {
-		this.servletContext = servletContext;
-	}
 }
