@@ -6,6 +6,7 @@ import org.activiti.engine.task.Comment;
 import org.activiti.engine.task.Task;
 import org.laotie777.activiti.entity.LeaveBill;
 import org.laotie777.activiti.entity.WorkflowBean;
+import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.InputStream;
 import java.util.List;
@@ -119,5 +120,10 @@ public interface IWorkflowService {
      */
     Map<String, Object> findCoordingByTask(String taskId);
 
-
+    /**
+     * 流部署
+     * @param png
+     * @param bpmn
+     */
+    void saveNewDeploye(MultipartFile png, MultipartFile bpmn,String fileName);
 }

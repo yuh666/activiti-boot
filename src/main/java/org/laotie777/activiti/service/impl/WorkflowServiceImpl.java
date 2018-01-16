@@ -1,9 +1,6 @@
 package org.laotie777.activiti.service.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -37,6 +34,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 工作流Service
@@ -347,4 +345,21 @@ public class WorkflowServiceImpl implements IWorkflowService {
 	public Map<String, Object> findCoordingByTask(String taskId) {
 		return null;
 	}
+
+    /**
+     * 流部署
+     * @param png
+     * @param bpmn
+     */
+    @Override
+    public void saveNewDeploye(MultipartFile png, MultipartFile bpmn,String fileName) {
+
+        try {
+            repositoryService.createDeployment().addInputStream(png.getOriginalFilename(),png.getInputStream())
+                    .addInputStream(bpmn.getOriginalFilename(),bpmn.getInputStream()).name(fileName).deploy();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }

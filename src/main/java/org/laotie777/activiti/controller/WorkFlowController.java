@@ -81,6 +81,27 @@ public class WorkFlowController {
 
     }
 
+    /**
+     * 流程部署
+     *
+     * @param bean
+     * @return
+     */
+    @RequestMapping("newdeployFile")
+    public ModelAndView newdeploy(@RequestParam("png") MultipartFile png, @RequestParam("bpmn") MultipartFile bpmn,String fileName) {
+
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("forward:/workflow/deployHome");
+
+        try {
+            workflowService.saveNewDeploye(png, bpmn,fileName);
+        } catch (Exception e) {
+            logger.error("文件上传失败");
+        }
+        return mav;
+
+    }
+
 
     /**
      * 查看流程图

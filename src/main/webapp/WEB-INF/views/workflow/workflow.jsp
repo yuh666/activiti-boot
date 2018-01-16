@@ -135,11 +135,20 @@
 		  </tr>
 		  <tr>
 		    <td>
-		    	<div align="left" class="STYLE21">
-					流程名称：<input type="text" name="fileName" cssStyle="width: 200px;"/><br/>
-					流程文件:<input type="file" name="file" cssStyle="width: 200px;"/><br/>
-					<input type="submit" value="上传流程" class="button_ok"/>
-				</div>
+                <div align="left" class="STYLE21">
+                    流程名称：<input type="text" name="fileName" cssStyle="width: 200px;"/><br/>
+                    流程文件:<input type="file" name="file" cssStyle="width: 200px;"/><br/>
+                </div>
+
+                <hr>
+
+                <div align="left" class="STYLE21">
+                    流程名称：<input type="text" name="fileName" cssStyle="width: 200px;"/><br/>
+                    bpmn:<input type="file" name="bpmn" cssStyle="width: 200px;"/><br/>
+                    png:<input type="file" name="png" cssStyle="width: 200px;"/><br/>
+                </div>
+                <br>
+                <input type="submit" value="上传流程" class="button_ok"/>
 		    </td>
 		  </tr>
 	</table>
