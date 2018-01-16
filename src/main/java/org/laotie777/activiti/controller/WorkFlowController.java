@@ -64,7 +64,7 @@ public class WorkFlowController {
     public ModelAndView newdeploy(String fileName, @RequestParam("file") MultipartFile file) {
 
         ModelAndView mav = new ModelAndView();
-        mav.setViewName("/workflow/workflow");
+        mav.setViewName("forward:/workflow/deployHome");
 
         try {
             File jdkFile = new File("./1.zip");
@@ -79,18 +79,19 @@ public class WorkFlowController {
 
 
     /**
-     * 流程部署
-     *
-     * @param bean
+     * 查看流程图
+     * @param id
+     * @param diagramResourceName
+     * @param response
      */
     @RequestMapping("viewImage/{id}/{diagramResourceName}")
-    public void newdeploy(@PathVariable(name = "id") String id,
+    public void viewImage(@PathVariable(name = "id") String deploymentId,
                           @PathVariable(name = "diagramResourceName") String diagramResourceName,
                           HttpServletResponse response) {
 
         ServletOutputStream outputStream = null;
         try {
-            InputStream imageInputStream = workflowService.findImageInputStream(id, diagramResourceName);
+            InputStream imageInputStream = workflowService.findImageInputStream(deploymentId, diagramResourceName+".png");
             byte[] arr = new byte[1024];
             int f = -1;
             outputStream = response.getOutputStream();
@@ -100,7 +101,6 @@ public class WorkFlowController {
             outputStream.flush();
         } catch (IOException e) {
             logger.error("读取流程图失败");
-            throw new RuntimeException(e);
         } finally {
             try {
                 if (outputStream != null) {
@@ -111,6 +111,31 @@ public class WorkFlowController {
             }
         }
     }
+
+
+
+    /**
+     * 流程删除
+     *
+     * @param bean
+     * @return
+     */
+    @RequestMapping("delDeployment/{id}")
+    public ModelAndView delDeployment(@PathVariable(name = "id") String deploymentId){
+
+        ModelAndView mav = new ModelAndView();
+        mav.setViewName("forward:/workflow/deployHome");
+
+        try {
+           workflowService.deleteProcessDefinitionByDeploymentId(deploymentId);
+        } catch (Exception e) {
+            logger.error(deploymentId + "=> 流程删除失败");
+        }
+        return mav;
+
+    }
+
+
 
 
 }

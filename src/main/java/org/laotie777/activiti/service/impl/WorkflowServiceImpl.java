@@ -109,9 +109,14 @@ public class WorkflowServiceImpl implements IWorkflowService {
         return repositoryService.getResourceAsStream(deploymentId,imageName);
 	}
 
+    /**
+     * 根据定义ID删除流程
+     * @param deploymentId
+     */
 	@Override
 	public void deleteProcessDefinitionByDeploymentId(String deploymentId) {
-
+	    //删除部署的流程 并且删除所有流程实例
+        repositoryService.deleteDeployment(deploymentId,true);
 	}
 
 	@Override

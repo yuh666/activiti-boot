@@ -101,7 +101,7 @@
                             <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">${pd.diagramResourceName}</div></td>
                             <td height="20" bgcolor="#FFFFFF" class="STYLE6"><div align="center">${pd.deploymentId}</div></td>
                             <td height="20" bgcolor="#FFFFFF"><div align="center" class="STYLE21">
-                                <a target="_blank" href="/workflow/viewImage/${pd.id}/${pd.diagramResourceName}">查看流程图</a>
+                                <a target="_blank" href="/workflow/viewImage/${pd.deploymentId}/${pd.diagramResourceName}">查看流程图</a>
                             </div></td>
                         </tr>
                     </c:forEach>
@@ -136,7 +136,7 @@
 		  <tr>
 		    <td>
 		    	<div align="left" class="STYLE21">
-					流程名称：<input type="text" name="filename" cssStyle="width: 200px;"/><br/>
+					流程名称：<input type="text" name="fileName" cssStyle="width: 200px;"/><br/>
 					流程文件:<input type="file" name="file" cssStyle="width: 200px;"/><br/>
 					<input type="submit" value="上传流程" class="button_ok"/>
 				</div>
