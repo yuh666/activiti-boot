@@ -310,6 +310,7 @@ public class WorkflowServiceImpl implements IWorkflowService {
             //更新请假单表的状态从1变成2（审核中-->审核完成）
             LeaveBill bill = leaveBillDao.findOne(workflowBean.getId());
             bill.setState(2);
+            leaveBillDao.save(bill);
         }
     }
 
