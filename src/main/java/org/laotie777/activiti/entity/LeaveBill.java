@@ -24,13 +24,15 @@ public class LeaveBill {
 	/**
 	 * 请假天数
 	 */
-	@Column(name = "name",unique = true)
+	@Column(name = "days")
 	private Integer days;
+
 	/**
 	 * 请假内容
 	 */
 	@Column(name = "content")
 	private String content;
+
 	@Column(name = "leaveDate")
 	private Date leaveDate = new Date();
 	/**
